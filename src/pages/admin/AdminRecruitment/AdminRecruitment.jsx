@@ -485,8 +485,38 @@ const AdminRecruitment = () => {
       {activeTab === 'applications' && (
         <div className="applications-section">
           {selectedRecruitment && (
-            <div className="selected-recruitment">
+            <div className="selected-recruitment" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem' }}>
               <h3>Applications for: {selectedRecruitment.title}</h3>
+              <a
+                href={`${import.meta.env.VITE_SERVER_URL || 'https://server.snsf.live'}/api/v1/recruitment/admin/applications/${selectedRecruitment._id}/export`}
+                download
+                onClick={async (e) => {
+                  e.preventDefault();
+                  try {
+                    const token = localStorage.getItem('token');
+                    const res = await fetch(e.currentTarget.href, {
+                      headers: { Authorization: `Bearer ${token}` }
+                    });
+                    if (!res.ok) throw new Error('Export failed');
+                    const blob = await res.blob();
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    const disposition = res.headers.get('Content-Disposition') || '';
+                    const match = disposition.match(/filename="(.+?)"/);
+                    a.download = match ? match[1] : 'applications.csv';
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    URL.revokeObjectURL(url);
+                  } catch (err) {
+                    alert('Failed to export CSV. Please try again.');
+                  }
+                }}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: '#16a34a', color: '#fff', padding: '0.45rem 1rem', borderRadius: '8px', fontWeight: 600, fontSize: '0.9rem', textDecoration: 'none', cursor: 'pointer' }}
+              >
+                ⬇ Export CSV
+              </a>
             </div>
           )}
 

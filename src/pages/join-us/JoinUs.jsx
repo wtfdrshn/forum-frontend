@@ -13,6 +13,7 @@ const RegistrationForm = () => {
     gender: '',
     email: '',
     prn: '',
+    phone: '',
     year: '',
     course: '',
   });
@@ -31,6 +32,7 @@ const RegistrationForm = () => {
         gender: formData.gender,
         email: formData.email.toLowerCase(),
         prn: Number(formData.prn),
+        phone: formData.phone,
         course: formData.course,
         year: formData.year,
       };
@@ -126,6 +128,19 @@ const RegistrationForm = () => {
           </div>
 
           <div className='inputRow'>
+            <div className='inputGroup'>
+              <label htmlFor="phone">Phone Number</label>
+              <input
+                value={formData.phone}
+                onChange={handleChange}
+                type="tel"
+                id="phone"
+                name="phone"
+                placeholder="10-digit mobile number"
+                pattern="[0-9]{10}"
+                title="Please enter a valid 10-digit phone number"
+              />
+            </div>
             <div className='inputGroup'>
               <label htmlFor="course">Course</label>
               <select
